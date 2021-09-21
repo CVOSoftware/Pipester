@@ -16,11 +16,8 @@ namespace Pipester.Protocol.Pipe
 
         private readonly NamedPipeClientStream _pipeClientStream;
 
-        public Client(InputConnector connector, CancellationToken token)
+        public Client(CancellationToken token)
         {
-            _token = token;
-            _handleAction = connector.HandleAction;
-            _pipeClientStream = new NamedPipeClientStream(".", connector.PipeName, PipeDirection.In);
         }
 
         public void Connect()

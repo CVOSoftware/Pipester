@@ -1,7 +1,6 @@
 ﻿using System;
 
 using Pipester.Protocol;
-using Pipester.Subscription;
 
 namespace Pipester
 {
@@ -14,16 +13,12 @@ namespace Pipester
         
         public PipeConnector(Guid input, Guid output, bool compress = false)
         {
-            var subscriptionManager = new Repository();
 
-            _compress = compress;
-
-            Subscriber = new Subscriber(subscriptionManager);
         }
 
         public PipeConnector(Guid input, Guid output, string encryption) : this (input, output)
         {
-            _encryption = encryption;
+
         }
 
         public bool Connected { get; }

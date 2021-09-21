@@ -8,11 +8,8 @@ namespace Pipester
     {
         private const string MessageException = "Message argument is null";
 
-        private readonly ConnectionManager _sender;
-
-        internal Sender(ConnectionManager sender)
+        internal Sender()
         {
-            _sender = sender;
         }
 
         public void Send(object message)
@@ -21,8 +18,6 @@ namespace Pipester
             {
                 throw new ArgumentException(MessageException);
             }
-
-            _sender.Send(message);
         }
     }
 }

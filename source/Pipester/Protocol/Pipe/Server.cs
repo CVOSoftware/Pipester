@@ -4,8 +4,6 @@ using System.Threading.Tasks;
 using System.IO;
 using System.IO.Pipes;
 
-using Pipester.Protocol.Connector;
-
 namespace Pipester.Protocol.Pipe
 {
     internal sealed class Server : IDisposable
@@ -16,10 +14,8 @@ namespace Pipester.Protocol.Pipe
 
         private readonly NamedPipeServerStream _pipeServerStream;
 
-        public Server(OutputConnector connector, CancellationToken token)
+        public Server(CancellationToken token)
         {
-            _pipeServerStream = new NamedPipeServerStream(connector.PipeName, PipeDirection.Out);
-            _token = token;
         }
 
         public void WaitConnection()
