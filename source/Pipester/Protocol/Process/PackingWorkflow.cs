@@ -5,7 +5,7 @@ using Pipester.Protocol.Setting;
 
 namespace Pipester.Protocol.Process
 {
-    internal sealed class PackingWorkflow : Workflow<BusinessMessage, byte[]>
+    internal sealed class PackingWorkflow : Workflow<BusinessMessage, string>
     {
         private readonly WorkflowSetting _setting;
 

@@ -8,14 +8,19 @@ namespace Pipester.Protocol.Pipe
 {
     internal sealed class Server : IDisposable
     {
+        private object _sendLockObject;
+
         private StreamWriter _writer;
 
-        private readonly CancellationToken _token;
+        private readonly CancellationTokenSource _tokenSource;
 
         private readonly NamedPipeServerStream _pipeServerStream;
 
-        public Server(CancellationToken token)
+        public Server(string pipeName)
         {
+            _sendLockObject = new object();
+            _tokenSource = new CancellationTokenSource();
+            _pipeServerStream = new NamedPipeServerStream(pipeName);
         }
 
         public void WaitConnection()
@@ -24,23 +29,28 @@ namespace Pipester.Protocol.Pipe
             {
                 _pipeServerStream.WaitForConnection();
                 _writer = new StreamWriter(_pipeServerStream);
-            }, _token);
+            }, _tokenSource.Token);
         }
 
         public void Send(string message)
         {
-            Task.Run(() => 
-            {   
-                _writer.WriteLine(message);
-                _writer.Flush();
-            }, _token);
+            lock(_sendLockObject)
+            {
+                try
+                {
+                    _writer.WriteLine(message);
+                    _writer.Flush();
+                }
+                finally { }
+            }
             
         }
 
         public void Dispose()
         {
-            _pipeServerStream?.Dispose();
-            _writer?.Dispose();
+            _tokenSource.Cancel();
+            _pipeServerStream.Dispose();
+            _writer.Dispose();
         }
     }
 }

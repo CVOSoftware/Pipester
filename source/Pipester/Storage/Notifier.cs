@@ -22,7 +22,13 @@ namespace Pipester.Storage
                 return;
             }
 
-            Parallel.ForEach(trackedItems, tracker => tracker.Handler(message));
+            Parallel.ForEach(trackedItems, tracker => {
+                try
+                {
+                    tracker.Handler(message);
+                }
+                finally { }
+            });
         }
     }
 }

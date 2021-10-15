@@ -1,4 +1,6 @@
-﻿using Pipester.Protocol.Process.Steps.Interface;
+﻿using System.Text;
+
+using Pipester.Protocol.Process.Steps.Interface;
 using Pipester.Protocol.Setting;
 using Pipester.Storage.Interface;
 
@@ -14,9 +16,9 @@ namespace Pipester.Protocol.Process.Steps
 
         private readonly IHandlerRepository _repository;
 
-        public UnpackingRawMessageStep(byte[] message, WorkflowSetting setting, IHandlerRepository repository)
+        public UnpackingRawMessageStep(string inputValue, WorkflowSetting setting, IHandlerRepository repository)
         {
-            _message = message;
+            _message = Encoding.UTF8.GetBytes(inputValue);
             _setting = setting;
             _repository = repository;
         }

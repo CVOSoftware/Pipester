@@ -10,14 +10,17 @@ namespace Pipester.Protocol.Pipe
     {
         private StreamReader _reader;
 
-        private readonly CancellationToken _token;
+        private readonly CancellationTokenSource _tokenSource;
 
-        private readonly Action<string> _handleAction;
+        private readonly Action<string> _handleResponseAction;
 
         private readonly NamedPipeClientStream _pipeClientStream;
 
-        public Client(CancellationToken token)
+        public Client(string pipeName, Action<string> handleResponseAction)
         {
+            _handleResponseAction = handleResponseAction;
+            _tokenSource = new CancellationTokenSource();
+            _pipeClientStream = new NamedPipeClientStream(pipeName);
         }
 
         public void Connect()
@@ -26,25 +29,32 @@ namespace Pipester.Protocol.Pipe
 
             _reader = new StreamReader(_pipeClientStream);
 
-            Task.Run(WaitResponse, _token);
+            Task.Run(WaitResponse, _tokenSource.Token);
         }
 
         public void Dispose()
         {
-            _pipeClientStream?.Dispose();
-            _reader?.Dispose();
+            _tokenSource.Cancel();
+            _pipeClientStream.Dispose();
+            _reader.Dispose();
         }
 
         private void WaitResponse()
         {
-            while (_token.IsCancellationRequested == false)
-            {
-                var message = _reader.ReadLine();
+            var token = _tokenSource.Token;
 
-                if (_token.IsCancellationRequested == false && message != null)
+            while (token.IsCancellationRequested == false)
+            {
+                try
                 {
-                    _handleAction(message);
+                    var message = _reader.ReadLine();
+
+                    if (token.IsCancellationRequested == false && message != null)
+                    {
+                        _handleResponseAction(message);
+                    }
                 }
+                finally { }
             }
         }
     }

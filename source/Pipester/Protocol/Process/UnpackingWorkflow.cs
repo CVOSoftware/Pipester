@@ -6,7 +6,7 @@ using Pipester.Storage.Interface;
 
 namespace Pipester.Protocol.Process
 {
-    internal sealed class UnpackingWorkflow : Workflow<byte[], BusinessMessage>
+    internal sealed class UnpackingWorkflow : Workflow<string, BusinessMessage>
     {
         private readonly WorkflowSetting _setting;
 
@@ -18,6 +18,6 @@ namespace Pipester.Protocol.Process
             _repository = repository;
         }
 
-        protected override IExecutableStep SetFirstStep(byte[] inputValue) => new UnpackingRawMessageStep(inputValue, _setting, _repository);
+        protected override IExecutableStep SetFirstStep(string inputValue) => new UnpackingRawMessageStep(inputValue, _setting, _repository);
     }
 }

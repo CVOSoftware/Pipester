@@ -1,16 +1,18 @@
-﻿using Pipester.Protocol.Process.Steps.Interface;
+﻿using System.Text;
+
+using Pipester.Protocol.Process.Steps.Interface;
 
 namespace Pipester.Protocol.Process.Steps
 {
-    internal class PackingEndStep : IEndStep<byte[]>
+    internal class PackingEndStep : IEndStep<string>
     {
-        private readonly byte[] _message;
+        private readonly string _message;
 
         public PackingEndStep(byte[] message)
         {
-            _message = message;
+            _message = Encoding.UTF8.GetString(message);
         }
 
-        public byte[] End() => _message;
+        public string End() => _message;
     }
 }
