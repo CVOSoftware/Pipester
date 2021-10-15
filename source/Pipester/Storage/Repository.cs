@@ -40,11 +40,21 @@ namespace Pipester.Storage
 
         #region Implementation IHandlerRepository
 
-        public IReadOnlySet<TrackedItem> GetTrackedItemsBySubscriptionTypeName(string subscriptionName)
+        public Type GetTypeBySubscriptionName(string subscriptionName)
         {
-            if (_subscribers.TryGetValue(subscriptionName, out var subscription))
+            if (_subscribers.TryGetValue(subscriptionName, out var tracker))
             {
-                return subscription.Handlers;
+                return tracker.SubscriptionType;
+            }
+
+            return default;
+        }
+
+        public IReadOnlySet<TrackedItem> GetTrackedItemsBySubscriptionName(string subscriptionName)
+        {
+            if (_subscribers.TryGetValue(subscriptionName, out var tracker))
+            {
+                return tracker.Handlers;
             }
 
             return default;

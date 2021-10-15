@@ -2,6 +2,7 @@
 using System.IO.Compression;
 
 using Pipester.Protocol.Process.Steps.Interface;
+using Pipester.Storage.Interface;
 
 namespace Pipester.Protocol.Process.Steps
 {
@@ -11,9 +12,12 @@ namespace Pipester.Protocol.Process.Steps
 
         private byte[] _processedMessage;
 
-        public DecompressionStep(byte[] message)
+        private IHandlerRepository _repository;
+
+        public DecompressionStep(byte[] message, IHandlerRepository repository)
         {
             _sourceMessage = message;
+            _repository = repository;
         }
 
         public void Execute()
@@ -29,7 +33,7 @@ namespace Pipester.Protocol.Process.Steps
 
         public IStep Next()
         {
-            var step = new FirstDeserializationStep(_processedMessage);
+            var step = new FirstDeserializationStep(_processedMessage, _repository);
 
             return step;
         }

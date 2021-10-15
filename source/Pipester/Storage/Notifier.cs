@@ -15,7 +15,7 @@ namespace Pipester.Storage
 
         public void Notify(string messageTypeName, object message)
         {
-            var trackedItems = _repository.GetTrackedItemsBySubscriptionTypeName(messageTypeName);
+            var trackedItems = _repository.GetTrackedItemsBySubscriptionName(messageTypeName);
 
             if(trackedItems == null)
             {

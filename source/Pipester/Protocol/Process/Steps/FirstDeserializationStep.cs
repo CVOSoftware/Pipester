@@ -6,6 +6,7 @@ using System.Text.Json;
 
 using Pipester.Protocol.Message;
 using Pipester.Protocol.Process.Steps.Interface;
+using Pipester.Storage.Interface;
 
 namespace Pipester.Protocol.Process.Steps
 {
@@ -15,9 +16,12 @@ namespace Pipester.Protocol.Process.Steps
 
         private readonly byte[] _sourceMessage;
 
-        public FirstDeserializationStep(byte[] sourceMessage)
+        private readonly IHandlerRepository _repository;
+
+        public FirstDeserializationStep(byte[] sourceMessage, IHandlerRepository repository)
         {
             _sourceMessage = sourceMessage;
+            _repository = repository;
         }
 
         public void Execute()
@@ -29,7 +33,7 @@ namespace Pipester.Protocol.Process.Steps
 
         public IStep Next()
         {
-            var step = new ToBusinessMessageStep(_processedMessage);
+            var step = new ToBusinessMessageStep(_processedMessage, _repository);
 
             return step;
         }

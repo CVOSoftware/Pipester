@@ -3,15 +3,18 @@ using System.IO;
 
 using Pipester.Protocol.Process.Steps.Base;
 using Pipester.Protocol.Process.Steps.Interface;
+using Pipester.Storage.Interface;
 
 namespace Pipester.Protocol.Process.Steps
 {
     internal sealed class DecryptionStep : BaseEncryptionStep
     {
-        public DecryptionStep(byte[] sourceMessage, string encryptionKey)
+        private readonly IHandlerRepository _repository;
+
+        public DecryptionStep(byte[] sourceMessage, string encryptionKey, IHandlerRepository repository)
             : base(sourceMessage, encryptionKey)
         {
-
+            _repository = repository;
         }
 
         public override void Execute()
@@ -30,7 +33,7 @@ namespace Pipester.Protocol.Process.Steps
 
         public override IStep Next()
         {
-            var step = new FirstDeserializationStep(_processedMessage);
+            var step = new FirstDeserializationStep(_processedMessage, _repository);
 
             return step;
         }

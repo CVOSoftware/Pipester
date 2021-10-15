@@ -1,5 +1,6 @@
 ﻿using Pipester.Protocol.Process.Steps.Interface;
 using Pipester.Protocol.Setting;
+using Pipester.Storage.Interface;
 
 namespace Pipester.Protocol.Process.Steps
 {
@@ -11,22 +12,25 @@ namespace Pipester.Protocol.Process.Steps
 
         private IExecutableStep _nextStep;
 
-        public UnpackingRawMessageStep(byte[] message, WorkflowSetting setting)
+        private readonly IHandlerRepository _repository;
+
+        public UnpackingRawMessageStep(byte[] message, WorkflowSetting setting, IHandlerRepository repository)
         {
             _message = message;
             _setting = setting;
+            _repository = repository;
         }
 
         public void Execute()
         {
             if (string.IsNullOrEmpty(_setting.EncryptionKey) == false)
             {
-                _nextStep = new DecryptionStep(_message, _setting.EncryptionKey);
+                _nextStep = new DecryptionStep(_message, _setting.EncryptionKey, _repository);
             }
 
             _nextStep = _setting.IsCompress
-                ? new DecompressionStep(_message)
-                : new FirstDeserializationStep(_message);
+                ? new DecompressionStep(_message, _repository)
+                : new FirstDeserializationStep(_message, _repository);
         }
 
         public IStep Next() => _nextStep;
