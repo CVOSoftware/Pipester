@@ -29,6 +29,8 @@ namespace Pipester.Storage.Model
 
             trackedItem = new TrackedItem(handler);
 
+            _trackedItems.Add(trackedItem);
+
             return new Subscription(trackedItem.Id, this);
         }
 

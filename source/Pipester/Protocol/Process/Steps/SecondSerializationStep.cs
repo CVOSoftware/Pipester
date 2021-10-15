@@ -18,6 +18,7 @@ namespace Pipester.Protocol.Process.Steps
         public SecondSerializationStep(CommunicationMessage message, WorkflowSetting setting)
         {
             _communicationMessage = message;
+            _setting = setting;
         }
 
         public void Execute()

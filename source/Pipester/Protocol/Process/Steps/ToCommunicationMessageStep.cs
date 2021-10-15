@@ -17,14 +17,15 @@ namespace Pipester.Protocol.Process.Steps
         public ToCommunicationMessageStep(BusinessMessage message, WorkflowSetting setting)
         {
             _businessMessage = message;
+            _setting = setting;
         }
 
         public void Execute()
         {
             _communicationMessage = new CommunicationMessage
             {
-                Id = _businessMessage.ToString(),
-                Type = _businessMessage.GetType().FullName,
+                Id = _businessMessage.Id.ToString(),
+                Type = _businessMessage.Type.FullName,
                 Value = JsonSerializer.Serialize(_businessMessage.Value)
             };
         }
