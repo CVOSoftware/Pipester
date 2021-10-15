@@ -15,14 +15,14 @@ namespace Pipester.Storage
 
         public void Notify(string messageTypeName, object message)
         {
-            var handlers = _repository.GetHandlersBySubscriptionTypeName(messageTypeName);
+            var trackedItems = _repository.GetTrackedItemsBySubscriptionTypeName(messageTypeName);
 
-            if(handlers == null)
+            if(trackedItems == null)
             {
                 return;
             }
 
-            Parallel.ForEach(handlers, handler => handler(message));
+            Parallel.ForEach(trackedItems, tracker => tracker.Handler(message));
         }
     }
 }

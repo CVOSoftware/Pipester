@@ -1,10 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+
+using Pipester.Storage.Model;
 
 namespace Pipester.Storage.Repository
 {
     internal interface IHandlerRepository
     {
-        IReadOnlySet<Action<object>> GetHandlersBySubscriptionTypeName(string subscriptionTypeName);
+        IReadOnlySet<TrackedItem> GetTrackedItemsBySubscriptionTypeName(string subscriptionTypeName);
     }
 }

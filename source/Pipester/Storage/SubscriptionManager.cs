@@ -8,50 +8,43 @@ namespace Pipester.Storage
 {
     internal sealed class SubscriptionManager : IHandlerRepository, ISubscriptionRepository
     {
-        private readonly Dictionary<string, Subscription> _subscribers;
+        private readonly Dictionary<string, SubscriptionTracker> _subscribers;
 
         public SubscriptionManager()
         {
-            _subscribers = new Dictionary<string, Subscription>();
+            _subscribers = new Dictionary<string, SubscriptionTracker>();
         }
 
         #region Implementation ISubscriptionRepository
 
-        public void Subscribe(Type subscriptionType, Action<object> handler)
+        public Subscription Subscribe(Type subscriptionType, Action<object> handler)
         {
-            var subscriptionTypeName = subscriptionType.FullName;
+            var subscriptionName = subscriptionType.FullName;
 
-            if (_subscribers.TryGetValue(subscriptionTypeName, out var subscription))
+            if (_subscribers.TryGetValue(subscriptionName, out var tracker))
             {
-                subscription.Add(handler);
+                var existedSubscription = tracker.Add(handler);
 
-                return;
+                return existedSubscription;
             }
 
-            var newSubscription = new Subscription(subscriptionType, handler);
+            var newTracker = new SubscriptionTracker(subscriptionType);
+            var subscription = newTracker.Add(handler);
 
-            _subscribers.TryAdd(subscriptionTypeName, newSubscription);
-        }
+            _subscribers.TryAdd(subscriptionName, newTracker);
 
-        public void Unsubscribe(Type subscriptionType, Action<object> action)
-        {
-            var subscriptionTypeName = subscriptionType.FullName;
-
-            if (_subscribers.TryGetValue(subscriptionTypeName, out var subscription))
-            {
-                subscription.Remove(action);
-            }
+            return subscription;
         }
 
         #endregion
 
         #region Implementation IHandlerRepository
 
-        public IReadOnlySet<Action<object>> GetHandlersBySubscriptionTypeName(string subscriptionTypeName)
+        public IReadOnlySet<TrackedItem> GetTrackedItemsBySubscriptionTypeName(string subscriptionName)
         {
-            if (_subscribers.TryGetValue(subscriptionTypeName, out var subscription))
+            if (_subscribers.TryGetValue(subscriptionName, out var subscription))
             {
-                return subscription.GetHandlers();
+                return subscription.Handlers;
             }
 
             return default;

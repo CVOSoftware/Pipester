@@ -1,22 +1,30 @@
 ﻿using System;
 
+using Pipester.Storage.Repository;
+
 namespace Pipester
 {
     public sealed class Subscriber
     {
-        private const string HandlerArgumentExceptionMessage = "Handler action is null";
+        private readonly ISubscriptionRepository _repository;
 
-        internal Subscriber()
+        internal Subscriber(ISubscriptionRepository repository)
         {
+            _repository = repository;
         }
 
-        public void Subscribe<T>(Action<T> handler) where T : class
+        public Subscription Subscribe<T>(Action<T> handler) where T : class
         {
+            var type = typeof(T);
+            var token = _repository.Subscribe(type, obj =>
+            {
+                if (obj is T message)
+                { 
+                    handler(message);
+                }
+            });
 
-        }
-
-        public void Unsubscribe<T>(Action<object> handler) where T : class
-        {
+            return token;
         }
     }
 }

@@ -1,22 +1,28 @@
 ﻿using System;
 
 using Pipester.Protocol;
+using Pipester.Storage;
 
 namespace Pipester
 {
-    public sealed class PipeConnector : IDisposable
+    public sealed class Connector : IDisposable
     {
         private readonly bool _compress;
 
         private readonly string _encryption;
 
-        
-        public PipeConnector(Guid input, Guid output, bool compress = false)
-        {
+        private readonly Notifier _notifier;
 
+        private readonly SubscriptionManager _subscriptionManager;
+        
+        public Connector(Guid input, Guid output, bool compress = false)
+        {
+            _subscriptionManager = new SubscriptionManager();
+            _notifier = new Notifier(_subscriptionManager);
+            Subscriber = new Subscriber(_subscriptionManager);
         }
 
-        public PipeConnector(Guid input, Guid output, string encryption) : this (input, output)
+        public Connector(Guid input, Guid output, string encryption) : this (input, output)
         {
 
         }
