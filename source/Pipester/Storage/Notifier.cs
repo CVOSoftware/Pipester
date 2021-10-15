@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-using Pipester.Storage.Repository;
+using Pipester.Storage.Interface;
 
 namespace Pipester.Storage
 {

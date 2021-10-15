@@ -2,15 +2,15 @@
 using System.Collections.Generic;
 
 using Pipester.Storage.Model;
-using Pipester.Storage.Repository;
+using Pipester.Storage.Interface;
 
 namespace Pipester.Storage
 {
-    internal sealed class SubscriptionManager : IHandlerRepository, ISubscriptionRepository
+    internal sealed class Repository : IHandlerRepository, ISubscriptionRepository
     {
         private readonly Dictionary<string, SubscriptionTracker> _subscribers;
 
-        public SubscriptionManager()
+        public Repository()
         {
             _subscribers = new Dictionary<string, SubscriptionTracker>();
         }

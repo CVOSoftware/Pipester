@@ -2,7 +2,7 @@
 
 using Pipester.Storage.Model;
 
-namespace Pipester.Storage.Repository
+namespace Pipester.Storage.Interface
 {
     internal interface IHandlerRepository
     {

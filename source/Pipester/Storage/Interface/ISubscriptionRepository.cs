@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Pipester.Storage.Repository
+namespace Pipester.Storage.Interface
 {
     internal interface ISubscriptionRepository
     {

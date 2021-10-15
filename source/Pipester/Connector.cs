@@ -13,11 +13,11 @@ namespace Pipester
 
         private readonly Notifier _notifier;
 
-        private readonly SubscriptionManager _subscriptionManager;
+        private readonly Repository _subscriptionManager;
         
         public Connector(Guid input, Guid output, bool compress = false)
         {
-            _subscriptionManager = new SubscriptionManager();
+            _subscriptionManager = new Repository();
             _notifier = new Notifier(_subscriptionManager);
             Subscriber = new Subscriber(_subscriptionManager);
         }
